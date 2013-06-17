@@ -66,10 +66,10 @@ function xhr(options, statechange){
 			case 2:
 			case 3:
 			case 4:
-			state.body = this.responseText;
+			state.responseBody = this.responseText;
+			state.responseHead = this.getAllResponseHeaders();
 			state.statusCode = this.status;
 			state.statusText = this.statusText;
-			state.head = this.getAllResponseHeaders();
 			break;
 
 			default:
@@ -78,10 +78,10 @@ function xhr(options, statechange){
 		statechange(state)
 	}
 	xhr.open(options.method, options.url, true, options.username, options.password);
-	if(options.headers) {
-		for(var headerName in options.headers) {
-			xhr.setRequestHeader(headerName, options.headers[headerName]);
+	if(options.requestHeaders) {
+		for(var headerName in options.requestHeaders) {
+			xhr.setRequestHeader(headerName, options.requestHeaders[headerName]);
 		}
 	}
-	xhr.send(options.body);
+	xhr.send(options.requestBody);
 }

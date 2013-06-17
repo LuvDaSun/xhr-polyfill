@@ -31,9 +31,9 @@ function registerChannel(iframeUrl) {
 			proxy.readyState = state.readyState;
 			proxy.status = state.statusCode;
 			proxy.statusText = state.statusText;
-			proxy.responseText = state.body;
+			proxy.responseText = state.responseBody;
 			proxy.getAllresponseHeaders = function() {
-				return state.head;
+				return state.responseHead;
 			}
 			proxy.onreadystatechange.apply(proxy);
 		}
@@ -90,7 +90,7 @@ function XMLHttpRequestProxy(){
 
 	var options = {
 		id: id
-		, headers: {}
+		, requestHeaders: {}
 	}
 
 	this.onreadystatechange = null
@@ -116,7 +116,7 @@ function XMLHttpRequestProxy(){
 	}
 	
 	this.send = function(data) {
-		options.body = data;
+		options.requestBody = data;
 		
 		window.openChannel(host, function(err, channel){
 			channel.proxies[id] = proxy;
@@ -134,7 +134,7 @@ function XMLHttpRequestProxy(){
 
 
 	this.setRequestHeader = function(name, value) {
-		options.headers[name] = value;
+		options.requestHeaders[name] = value;
 	}
 	this.getAllresponseHeaders = function() {
 		return '';
