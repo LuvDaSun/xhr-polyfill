@@ -22,12 +22,15 @@ var messageHandlers = {
 
 	, "xdr-onreadystatechange": function(xhr) {
 		if (xhr.readyState === 4){
-			document.getElementById('responseText').innerHTML = xhr.responseText;
+			document.getElementById('responseText').innerHTML = xhr.body;
 		}
 	}
 }
 
-window.attachEvent("onmessage", function(e){
+if(window.attachEvent) window.attachEvent("onmessage", window_onmessage);
+else window.addEventListener("message", window_onmessage, false);
+
+function window_onmessage(e){
 	var message;
 
 	try {
@@ -40,7 +43,7 @@ window.attachEvent("onmessage", function(e){
 	if(!(message.type in messageHandlers)) return;
 
 	messageHandlers[message.type].apply(null, message.arguments);
-});
+}
 
 function registerXChannel(url) {
 	var match = reHost.exec(url);

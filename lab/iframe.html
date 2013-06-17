@@ -3,43 +3,26 @@
 <html>
 <head>
 <title></title>
+<script type="text/javascript" src="xhr.js"></script>
 <script type="text/javascript">
 
 var messageHandlers = {
 	"xdr-request": function(request) {
-		var xhr = window.XMLHttpRequest();
-		xhr.onreadystatechange = function(){
-			var request = {};
-			request.readyState = this.readyState;
-			switch(this.readyState){
-
-				case 1:
-				break;
-
-				case 2:
-				case 3:
-				case 4:
-				request.responseText = this.responseText;
-				//request.responseXML = this.responseXML;
-				request.status = this.status;
-				request.statusText = this.statusText;
-				break;
-
-				default:
-				throw 'invalid state'
-			}
+		xhr(request, function(state) {
 
 			window.parent.postMessage(JSON.stringify({
 				type: 'xdr-onreadystatechange'
-				, arguments: [request]
+				, arguments: [state]
 			}), '*');
-		}
-		xhr.open(request.method, request.url, true);
-		xhr.send(request.body);
+
+		});
 	}
 }
 
-window.attachEvent("onmessage", function(e){
+if(window.attachEvent) window.attachEvent("onmessage", window_onmessage);
+else window.addEventListener("message", window_onmessage, false);
+
+function window_onmessage(e){
 	var message;
 
 	try {
@@ -52,16 +35,12 @@ window.attachEvent("onmessage", function(e){
 	if(!(message.type in messageHandlers)) return;
 
 	messageHandlers[message.type].apply(null, message.arguments);
-});
-
-window.XMLHttpRequest = window.XMLHttpRequest || function() {
-	try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
-	try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
-	try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
-	throw new Error("This browser does not support XMLHttpRequest.");
 }
 
-window.attachEvent("onload", function(e){
+if(window.attachEvent) window.attachEvent("onload", window_load);
+else window.addEventListener("load", window_load, false);
+
+function window_load(e){
 
 	window.parent.postMessage(JSON.stringify({
 		type: 'xdr-load'
@@ -70,7 +49,7 @@ window.attachEvent("onload", function(e){
 		}]
 	}), '*');
 
-});
+}
 
 </script>
 </head>

@@ -21,6 +21,7 @@ app
 .options('*', function (req, res, next) {
 	res.send(204);
 })
+.use(express.static('src'))
 .use(express.static('lab'))
 ;
 
