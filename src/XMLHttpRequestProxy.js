@@ -139,9 +139,9 @@ function XMLHttpRequestProxy(){
 	this.getAllresponseHeaders = function() {
 		return '';
 	}
-	this.getRepsonseHeader = function(name) {
-		var re = new Regexp('^' + name + '\\:\\s*(.*)$', 'gim');
-		var match = re.exec(getAllresponseHeaders());
+	this.getResponseHeader = function(name) {
+		var re = new RegExp('^' + name + '\\:\\s*(.*)$', 'gim');
+		var match = re.exec(this.getAllresponseHeaders());
 		if(!match) return '';
 		else return match[1];
 	}
