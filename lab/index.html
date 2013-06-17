@@ -1,86 +1,73 @@
+<!DOCTYPE html>
+
 <html>
-
 <head>
-	<title>index</title>
-
-<script type="text/javascript" src="XMLHttpRequestProxy.js"></script>
+<title></title>
 <script type="text/javascript">
 
-document.domain = 'ebu.bz';
+var reHost = /^(?:\w+\:)?(?:\/\/)?([^\/]*)/;
+var channels = {};
 
-if(document.documentMode && document.documentMode < 10) {
-	XMLHttpRequest = XMLHttpRequestProxy;
-	window.registerXMLHttpRequestProxy('//local-alt.ebu.bz:8080/iframe.html');
-}
+var messageHandlers = {
+	"xdr-load": function(message) {
+		var channel = channels[message.host];
+		channel.iframe.contentWindow.postMessage(JSON.stringify({
+			type: 'xdr-request'
+			, arguments: [{
+				method: 'GET'
+				, url: '//local-alt.ebu.bz:8080/data.json'
+			}]
+		}), '*');
+	}
 
-
-window.runTest = function(){
-
-
-
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
-	xhr.onreadystatechange = function() {
+	, "xdr-onreadystatechange": function(xhr) {
 		if (xhr.readyState === 4){
 			document.getElementById('responseText').innerHTML = xhr.responseText;
 		}
-	};
-	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-	xhr.send(null); 
-
-	// window.getXMLHttpRequest('local-alt.ebu.bz:8080', function(e, XMLHttpRequest){
-
-	// 	// var xhr = new XMLHttpRequest();
-	// 	// xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
-	// 	// xhr.onreadystatechange = function() {
-	// 	// 	if (xhr.readyState === 4){
-	// 	// 		document.getElementById('responseText').innerHTML = xhr.responseText;
-	// 	// 	}
-	// 	// };
-	// 	// xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-	// 	// xhr.send(null); 
-
-	// });
-
-
-
-
-
-// 	var iframe = document.createElement('iframe');
-// 	iframe.src = '//local-alt.ebu.bz:8080/XMLHttpRequestProxy.html';
-// 	document.body.appendChild(iframe);
-// }
-
-// window.XMLHttpRequestProxy_load = function(host, XMLHttpRequest) {
-
-// 	var xhr = new XMLHttpRequest();
-// 	xhr.onreadystatechange = function() {
-// 		if (xhr.readyState === 4){
-// 			document.getElementById('responseText').innerHTML = xhr.responseText;
-// 		}
-// 	};
-// 	xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
-// 	// xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-// 	xhr.send(null); 
-
-
-// 	// window.xhr_onreadystatechange = function(e){
-// 	//     if (this.readyState === 4){
-// 	//         document.getElementById('responseText').innerHTML = this.responseText;
-// 	//     }
-// 	// }
+	}
 }
 
-</script>
+window.attachEvent("onmessage", function(e){
+	var message;
 
+	try {
+		message = JSON.parse(e.data);
+	}
+	catch(err) {
+		return;
+	}
+	
+	if(!(message.type in messageHandlers)) return;
+
+	messageHandlers[message.type].apply(null, message.arguments);
+});
+
+function registerXChannel(url) {
+	var match = reHost.exec(url);
+	if(!match) throw 'invalid iframeUrl';
+
+	var iframe = document.createElement('iframe');
+	iframe.src = url;
+	document.scripts[0].parentNode.insertBefore(iframe, document.scripts[0]);	
+
+	var channel = {
+		host: match[1]
+		, iframe: iframe
+	}
+
+	channels[channel.host] = channel;
+}
+
+registerXChannel('//local-alt.ebu.bz:8080/iframe.html');
+
+</script>
 </head>
 
-<body onload="runTest()">
+<body>
 	<p>
-	index
+		index
 	</p>
 	<p id="responseText">
 	</p>
 </body>
-
 </html>
