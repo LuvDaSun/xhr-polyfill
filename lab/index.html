@@ -19,7 +19,12 @@ window.runTest = function(){
 	xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4){
-			document.getElementById('responseText').innerHTML = xhr.responseText + xhr.getResponseHeader('content-type');
+			document.getElementById('responseText').innerHTML = [
+				xhr.responseText
+				, xhr.getResponseHeader('content-type')
+				, xhr.getResponseHeader('Access-Control-Allow-Origin')
+				, xhr.getResponseHeader('Cache-control')
+			].join('<br />');
 		}
 	};
 	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
