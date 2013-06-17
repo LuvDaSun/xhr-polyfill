@@ -1,0 +1,86 @@
+<html>
+
+<head>
+	<title>index</title>
+
+<script type="text/javascript" src="XMLHttpRequestProxy.js"></script>
+<script type="text/javascript">
+
+document.domain = 'ebu.bz';
+
+if(document.documentMode && document.documentMode < 10) {
+	XMLHttpRequest = XMLHttpRequestProxy;
+	window.registerXMLHttpRequestProxy('//local-alt.ebu.bz:8080/iframe.html');
+}
+
+
+window.runTest = function(){
+
+
+
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4){
+			document.getElementById('responseText').innerHTML = xhr.responseText;
+		}
+	};
+	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	xhr.send(null); 
+
+	// window.getXMLHttpRequest('local-alt.ebu.bz:8080', function(e, XMLHttpRequest){
+
+	// 	// var xhr = new XMLHttpRequest();
+	// 	// xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
+	// 	// xhr.onreadystatechange = function() {
+	// 	// 	if (xhr.readyState === 4){
+	// 	// 		document.getElementById('responseText').innerHTML = xhr.responseText;
+	// 	// 	}
+	// 	// };
+	// 	// xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	// 	// xhr.send(null); 
+
+	// });
+
+
+
+
+
+// 	var iframe = document.createElement('iframe');
+// 	iframe.src = '//local-alt.ebu.bz:8080/XMLHttpRequestProxy.html';
+// 	document.body.appendChild(iframe);
+// }
+
+// window.XMLHttpRequestProxy_load = function(host, XMLHttpRequest) {
+
+// 	var xhr = new XMLHttpRequest();
+// 	xhr.onreadystatechange = function() {
+// 		if (xhr.readyState === 4){
+// 			document.getElementById('responseText').innerHTML = xhr.responseText;
+// 		}
+// 	};
+// 	xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
+// 	// xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+// 	xhr.send(null); 
+
+
+// 	// window.xhr_onreadystatechange = function(e){
+// 	//     if (this.readyState === 4){
+// 	//         document.getElementById('responseText').innerHTML = this.responseText;
+// 	//     }
+// 	// }
+}
+
+</script>
+
+</head>
+
+<body onload="runTest()">
+	<p>
+	index
+	</p>
+	<p id="responseText">
+	</p>
+</body>
+
+</html>
