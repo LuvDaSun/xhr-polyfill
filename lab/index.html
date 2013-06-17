@@ -3,73 +3,34 @@
 <html>
 <head>
 <title></title>
+<script type="text/javascript" src="XMLHttpRequestProxy.js"></script>
 <script type="text/javascript">
 
-var reHost = /^(?:\w+\:)?(?:\/\/)?([^\/]*)/;
-var channels = {};
+registerChannel('//local-alt.ebu.bz:8080/channel.html');
 
-var messageHandlers = {
-	"xdr-load": function(message) {
-		var channel = channels[message.host];
-		channel.iframe.contentWindow.postMessage(JSON.stringify({
-			type: 'xdr-request'
-			, arguments: [{
-				method: 'GET'
-				, url: '//local-alt.ebu.bz:8080/data.json'
-			}]
-		}), '*');
-	}
+// if(document.documentMode && document.documentMode < 10) {
+// 	XMLHttpRequest = XMLHttpRequestProxy;
+// }
 
-	, "xdr-onreadystatechange": function(xhr) {
+
+window.runTest = function(){
+
+	var xhr = new XMLHttpRequestProxy();
+	xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
+	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4){
-			document.getElementById('responseText').innerHTML = xhr.body;
+			document.getElementById('responseText').innerHTML = xhr.responseText;
 		}
-	}
+	};
+	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	xhr.send(null); 
 }
 
-if(window.attachEvent) window.attachEvent("onmessage", window_onmessage);
-else window.addEventListener("message", window_onmessage, false);
-
-function window_onmessage(e){
-	var message;
-
-	try {
-		message = JSON.parse(e.data);
-	}
-	catch(err) {
-		return;
-	}
-	
-	if(!(message.type in messageHandlers)) return;
-
-	messageHandlers[message.type].apply(null, message.arguments);
-}
-
-function registerXChannel(url) {
-	var match = reHost.exec(url);
-	if(!match) throw 'invalid iframeUrl';
-
-	var iframe = document.createElement('iframe');
-	iframe.src = url;
-	document.scripts[0].parentNode.insertBefore(iframe, document.scripts[0]);	
-
-	var channel = {
-		host: match[1]
-		, iframe: iframe
-	}
-
-	channels[channel.host] = channel;
-}
-
-registerXChannel('//local-alt.ebu.bz:8080/iframe.html');
 
 </script>
 </head>
 
-<body>
-	<p>
-		index
-	</p>
+<body onload="runTest()">
 	<p id="responseText">
 	</p>
 </body>
