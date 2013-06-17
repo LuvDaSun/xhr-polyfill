@@ -1,0 +1,13 @@
+{
+  "name": "xhr-polyfill",
+  "version": "0.0.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "devDependencies": {
+    "mocha": "~1",
+    "expect": "~0.2"
+  }
+}

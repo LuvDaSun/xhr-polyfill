@@ -1,0 +1,19 @@
+{
+  "name": "xhr-polyfill",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "dependencies": {},
+  "devDependencies": {
+    "express": "~3.2",
+    "karma": "~0.8",
+    "bower": "~0.9.2"
+  },
+  "scripts": {
+    "start": "node server 8080",
+      "test": "karma start",
+      "install": "bower install"
+  },
+  "repository": "",
+  "author": "elmerbulthuis <elmerbulthuis@gmail.com>",
+  "license": "BSD"
+}
