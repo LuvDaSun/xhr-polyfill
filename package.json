@@ -13,7 +13,7 @@
       "test": "karma start",
       "install": "bower install"
   },
-  "repository": "git@github.com:elmerbulthuis/xhr-polyfill.git",
+  "repository": "git://github.com/elmerbulthuis/xhr-polyfill.git",
   "author": "elmerbulthuis <elmerbulthuis@gmail.com>",
   "license": "BSD"
 }
