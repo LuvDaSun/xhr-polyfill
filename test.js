@@ -1,21 +1,22 @@
-var express = require('express');
+var connect = require('connect');
 var karma = require('karma');
 var serverPort = 9877;
 
 process.chdir(__dirname);
 
-express()
-.use(express.logger('dev'))
+connect()
+.use(connect.logger('dev'))
 .use(function (req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
 	next();
 })
-.options('*', function (req, res, next) {
-	res.send(204);
+.use(function (req, res, next) {
+	if(req.method === 'OPTIONS') res.send(204);
+	else next();
 })
-.use(express.static('src'))
-.use(express.static('test'))
+.use(connect.static('src'))
+.use(connect.static('test'))
 .listen(serverPort)
 ;
 console.log('server listening on port ' + serverPort);
