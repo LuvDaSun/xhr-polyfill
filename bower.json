@@ -7,7 +7,5 @@
     "components"
   ],
   "devDependencies": {
-    "mocha": "~1",
-    "expect": "~0.2"
   }
 }

@@ -6,7 +6,7 @@
 <script type="text/javascript" src="XMLHttpRequestProxy.js"></script>
 <script type="text/javascript">
 
-registerChannel('//local-alt.ebu.bz:8080/channel.html');
+registerChannel('//' + location.hostname + ':8081/channel.html');
 
 // if(document.documentMode && document.documentMode < 10) {
 // 	XMLHttpRequest = XMLHttpRequestProxy;
@@ -15,8 +15,8 @@ registerChannel('//local-alt.ebu.bz:8080/channel.html');
 
 window.runTest = function(){
 
-	var xhr = new XMLHttpRequestProxy();
-	xhr.open('GET', '//local-alt.ebu.bz:8080/data.json', true);
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '//' + location.hostname + ':8081/data.json', true);
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4){
 			document.getElementById('responseText').innerHTML = [
