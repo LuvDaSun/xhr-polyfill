@@ -1,7 +1,7 @@
 describe('test', function(){
-	before(function(){
-		registerChannel('http://' + location.hostname + ':9877/xhr-channel.html');
-	});
+	// before(function(){
+	// 	registerChannel('http://' + location.hostname + ':9877/xhr-channel.html');
+	// });
 
 	it('should be ok', function(cb){
 

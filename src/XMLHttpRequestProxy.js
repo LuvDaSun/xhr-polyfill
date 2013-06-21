@@ -48,7 +48,7 @@ function registerChannel(iframeUrl) {
 }//registerChannel
 
 window.openChannel = function(origin, cb){
-	if(!(origin in channels)) return cb('unknown origin', null);
+	if(!(origin in channels)) registerChannel(origin + '/xhr-channel.html');	
 
 	var channel = channels[origin];
 
