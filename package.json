@@ -1,6 +1,6 @@
 {
   "name": "xhr-polyfill",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "xhr-polyfill will enable you to make cross domain request in ie8 / ie9",
   "dependencies": {},
   "devDependencies": {
