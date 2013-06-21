@@ -4,6 +4,7 @@ var messageHandlers = {
 
 			window.parent.postMessage(JSON.stringify({
 				type: 'xhr-statechange'
+				, host: location.host
 				, arguments: [state]
 			}), '*');
 
@@ -36,7 +37,6 @@ function window_load(e){
 
 	window.parent.postMessage(JSON.stringify({
 		type: 'xhr-ready'
-		, host: location.host
 		, arguments: []
 	}), '*');
 

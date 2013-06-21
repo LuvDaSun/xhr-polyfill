@@ -151,7 +151,7 @@ function XMLHttpRequestProxy(){
 
 }//XMLHttpRequestProxy
 
-	XMLHttpRequest = XMLHttpRequestProxy;
 if(document.documentMode && document.documentMode < 10) {
+	XMLHttpRequest = XMLHttpRequestProxy;
 }
 
