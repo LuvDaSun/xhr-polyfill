@@ -43,7 +43,7 @@ function registerChannel(iframeUrl) {
 }//registerChannel
 
 window.openChannel = function(host, cb){
-	if(!(host in channels)) cb('unknown host', null);
+	if(!(host in channels)) return cb('unknown host', null);
 
 	var channel = channels[host];
 
@@ -120,6 +120,8 @@ function XMLHttpRequestProxy(){
 		options.requestBody = data;
 		
 		window.openChannel(host, function(err, channel){
+			if(err) throw err;
+			
 			channel.proxies[id] = proxy;
 			channel.iframe.contentWindow.postMessage(JSON.stringify({
 				type: 'xhr-call'
