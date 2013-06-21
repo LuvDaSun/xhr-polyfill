@@ -32,7 +32,7 @@ function registerChannel(iframeUrl) {
 			proxy.status = state.statusCode;
 			proxy.statusText = state.statusText;
 			proxy.responseText = state.responseBody;
-			proxy.getAllresponseHeaders = function() {
+			proxy.getAllResponseHeaders = function() {
 				return state.responseHead;
 			}
 			proxy.onreadystatechange.apply(proxy);
@@ -55,7 +55,7 @@ window.openChannel = function(host, cb){
 
 	channel.iframe = document.createElement('iframe');
 	channel.iframe.src = channel.iframeUrl;
-	channel.style.display = 'none';
+	channel.iframe.style.display = 'none';
 	document.scripts[0].parentNode.insertBefore(channel.iframe, document.scripts[0]);	
 
 }//openChannel
@@ -137,7 +137,7 @@ function XMLHttpRequestProxy(){
 	this.setRequestHeader = function(name, value) {
 		options.requestHeaders[name] = value;
 	}
-	this.getAllresponseHeaders = function() {
+	this.getAllResponseHeaders = function() {
 		return '';
 	}
 	this.getResponseHeader = function(name) {
