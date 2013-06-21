@@ -30,5 +30,9 @@ The client script wraps all the code in a proxy (XMLHttpRequestProxy) that may b
 
 ## How do i install it?
 
-...
+xhr-polyfill can be installed useing bower
+	
+	bower install xhr-polyfill
+
+Also, you will need to place the xhr-channel.html file on your server.
 
