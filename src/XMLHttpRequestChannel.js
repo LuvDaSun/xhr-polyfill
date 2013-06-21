@@ -30,19 +30,6 @@ function window_onmessage(e){
 	messageHandlers[message.type].apply(null, message.arguments);
 }
 
-if(window.attachEvent) window.attachEvent("onload", window_load);
-else window.addEventListener("load", window_load, false);
-
-function window_load(e){
-
-	window.parent.postMessage(JSON.stringify({
-		type: 'xhr-ready'
-		, arguments: []
-	}), '*');
-
-}
-
-
 
 function xhr(options, statechange){
 

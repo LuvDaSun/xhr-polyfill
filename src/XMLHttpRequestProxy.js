@@ -19,15 +19,7 @@ function registerChannel(iframeUrl) {
 	}
 
 	channel.messageHandlers = {
-		"xhr-ready": function(){
-			var cb;
-
-			channel.ready = true;
-			while(cb = channel.callbackQueue.shift()) {
-				cb(null, channel);
-			}
-		}
-		, "xhr-statechange": function(state){
+		"xhr-statechange": function(state){
 			if(!(state.id in channel.proxies)) return;
 
 			var proxy = channel.proxies[state.id];
@@ -59,6 +51,19 @@ function openChannel(origin, cb){
 	channel.callbackQueue = [cb];
 
 	channel.iframe = document.createElement('iframe');
+
+	function channel_onload(){
+		var cb;
+
+		channel.ready = true;
+		while(cb = channel.callbackQueue.shift()) {
+			cb(null, channel);
+		}
+	}//onload
+
+	if(channel.iframe.attachEvent) channel.iframe.attachEvent("onload", channel_onload);
+	else channel.iframe.addEventListener("load", channel_onload, false);
+	
 	channel.iframe.src = channel.iframeUrl;
 	channel.iframe.style.display = 'none';
 	document.scripts[0].parentNode.insertBefore(channel.iframe, document.scripts[0]);	
