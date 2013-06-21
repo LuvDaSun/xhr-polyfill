@@ -94,6 +94,7 @@ function XMLHttpRequestProxy(){
 	var id = (++idSequence).toString(36);
 	var proxy = this;
 	var origin = null;
+	var responseHeaders = null;
 
 	var options = {
 		id: id
@@ -150,10 +151,25 @@ function XMLHttpRequestProxy(){
 		return '';
 	}
 	this.getResponseHeader = function(name) {
-		var re = new RegExp('^' + name + '\\:\\s*(.*)$', 'gim');
-		var match = re.exec(this.getAllResponseHeaders());
-		if(!match) return '';
-		else return match[1];
+		var parts, partCount, partIndex, part;
+		var match;
+
+		if(!responseHeaders) {
+			parts = this.getAllResponseHeaders().split(/\r\n/);
+			partCount = parts.length;
+
+			responseHeaders = {};
+
+			for(partIndex = 0; partIndex < partCount; partIndex++) {
+				part = parts[partIndex];
+				match = /^(.+?)\:\s*(.+)$/.exec(part);
+				if(!match) continue;
+
+				responseHeaders[match[1].toLowerCase()] = match[2];
+			}
+		}
+
+		return responseHeaders[name.toLowerCase()];
 	}
 
 }//XMLHttpRequestProxy
