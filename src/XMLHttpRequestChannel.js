@@ -1,33 +1,22 @@
-var messageHandlers = {
-	"xhr-call": function(request) {
-		xhr(request, function(state) {
-
-			window.parent.postMessage(JSON.stringify({
-				type: 'xhr-statechange'
-				, host: location.host
-				, arguments: [state]
-			}), '*');
-
-		});
-	}
-}
-
 if(window.attachEvent) window.attachEvent("onmessage", window_onmessage);
 else window.addEventListener("message", window_onmessage, false);
 
 function window_onmessage(e){
-	var message;
-
-	try {
-		message = JSON.parse(e.data);
-	}
-	catch(err) {
-		return;
-	}
+	var message = e.data;
 	
-	if(!(message.type in messageHandlers)) return;
+	if(e.source !== window.parent) return;
 
-	messageHandlers[message.type].apply(null, message.arguments);
+	if(typeof message !== 'string') return;
+	if(message[0] !== '{') return;
+
+	message = JSON.parse(e.data);
+	
+	xhr(message, function(state) {
+
+		window.parent.postMessage(JSON.stringify(state), '*');
+
+	});
+
 }
 
 
