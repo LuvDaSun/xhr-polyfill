@@ -1,7 +1,7 @@
 {
   "name": "xhr-polyfill",
-  "version": "0.0.0",
-  "description": "ERROR: No README.md file found!",
+  "version": "0.0.1",
+  "description": "xhr-polyfill will enable you to make cross domain request in ie8 / ie9",
   "dependencies": {},
   "devDependencies": {
     "karma": "~0.8",
