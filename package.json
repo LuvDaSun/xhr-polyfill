@@ -1,0 +1,18 @@
+{
+  "name": "xhr-polyfill",
+  "version": "0.0.1",
+  "description": "xhr-polyfill will enable you to make cross domain request in ie8 / ie9",
+  "dependencies": {},
+  "devDependencies": {
+    "karma": "~0.8",
+    "bower": "~0.9",
+    "connect": "~2"
+  },
+  "scripts": {
+    "test": "node test",
+    "install": "bower install"
+  },
+  "repository": "git://github.com/elmerbulthuis/xhr-polyfill.git",
+  "author": "elmerbulthuis <elmerbulthuis@gmail.com>",
+  "license": "BSD"
+}
