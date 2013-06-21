@@ -60,10 +60,10 @@ function xhr(options, statechange){
 		switch(this.readyState){
 
 			case 1:
-			break;
-
 			case 2:
 			case 3:
+			break;
+
 			case 4:
 			state.responseBody = this.responseText;
 			state.responseHead = this.getAllResponseHeaders();
