@@ -11,7 +11,7 @@ describe('test', function(){
 			if (xhr.readyState === 4){				
 
 				expect(xhr.status).to.be(200);
-				expect(xhr.status).to.be(200);
+				expect(xhr.getResponseHeader('Content-Type')).to.be('application/json');
 				expect(xhr.responseText).to.be('["one", "two", "three"]');
 				
 				cb();
