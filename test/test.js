@@ -1,6 +1,6 @@
 describe('test', function(){
 	before(function(){
-		registerChannel('http://localhost:9877/channel.html');
+		registerChannel('http://localhost:9877/xhr-channel.html');
 	});
 
 	it('should be ok', function(cb){
