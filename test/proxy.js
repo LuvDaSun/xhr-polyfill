@@ -1,7 +1,4 @@
-describe('test', function(){
-	// before(function(){
-	// 	registerChannel('http://' + location.hostname + ':9877/xhr-channel.html');
-	// });
+describe('proxy', function(){
 
 	it('should be ok', function(cb){
 
