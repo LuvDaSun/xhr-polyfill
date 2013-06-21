@@ -1,8 +1,15 @@
 var reOrigin = /^(?:\w+\:)?(?:\/\/)([^\/]*)/;
 var channels = {};
 
+function resolveUrl(url) {
+	var a = document.createElement('a');
+	a.href = url;
+	return a.href;
+}
+
 function registerChannel(iframeUrl) {
-	var match = reOrigin.exec(iframeUrl) || reOrigin.exec(location.href);
+	iframeUrl = resolveUrl(iframeUrl);
+	var match = reOrigin.exec(iframeUrl);
 	if(!match) throw 'invalid iframeUrl';
 
 	var channel = {
@@ -16,7 +23,6 @@ function registerChannel(iframeUrl) {
 			var cb;
 
 			channel.ready = true;
-
 			while(cb = channel.callbackQueue.shift()) {
 				cb(null, channel);
 			}
@@ -105,7 +111,8 @@ function XMLHttpRequestProxy(){
 	this.open = function(method, url, async, username, password){
 		if(async === false) throw 'only asynchronous behavior is supported';
 
-		var match = reOrigin.exec(url) || reOrigin.exec(location.href);
+		url = resolveUrl(url);
+		var match = reOrigin.exec(url);
 		if(!match) throw 'invalid url';
 
 		origin = match[0];
