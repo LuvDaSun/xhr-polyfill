@@ -1,12 +1,19 @@
-var reHost = /^(?:\w+\:)?(?:\/\/)?([^\/]*)/;
+var reOrigin = /^(?:\w+\:)?(?:\/\/)([^\/]*)/;
 var channels = {};
 
+function resolveUrl(url) {
+	var a = document.createElement('a');
+	a.href = url;
+	return a.href;
+}
+
 function registerChannel(iframeUrl) {
-	var match = reHost.exec(iframeUrl);
+	iframeUrl = resolveUrl(iframeUrl);
+	var match = reOrigin.exec(iframeUrl);
 	if(!match) throw 'invalid iframeUrl';
 
 	var channel = {
-		host: match[1]
+		origin: match[0]
 		, iframeUrl: iframeUrl
 		, proxies: {}
 	}
@@ -16,7 +23,6 @@ function registerChannel(iframeUrl) {
 			var cb;
 
 			channel.ready = true;
-
 			while(cb = channel.callbackQueue.shift()) {
 				cb(null, channel);
 			}
@@ -38,14 +44,13 @@ function registerChannel(iframeUrl) {
 			proxy.onreadystatechange.apply(proxy);
 		}
 	}
-
-	channels[channel.host] = channel;
+	channels[channel.origin] = channel;
 }//registerChannel
 
-window.openChannel = function(host, cb){
-	if(!(host in channels)) return cb('unknown host', null);
+window.openChannel = function(origin, cb){
+	if(!(origin in channels)) return cb('unknown origin', null);
 
-	var channel = channels[host];
+	var channel = channels[origin];
 
 	if(channel.ready) return cb(null, channel);
 
@@ -66,6 +71,10 @@ else window.addEventListener("message", window_onmessage, false);
 function window_onmessage(e){
 	var message;
 
+	if(!(e.origin in channels)) return;
+
+	var channel = channels[e.origin];
+
 	try {
 		message = JSON.parse(e.data);
 	}
@@ -73,9 +82,6 @@ function window_onmessage(e){
 		return;
 	}
 	
-	if(!(message.host in channels)) return;
-
-	var channel = channels[message.host];
 	if(!(message.type in channel.messageHandlers)) return;
 
 	channel.messageHandlers[message.type].apply(null, message.arguments);
@@ -87,7 +93,7 @@ var idSequence = 0;
 function XMLHttpRequestProxy(){
 	var id = (++idSequence).toString(36);
 	var proxy = this;
-	var host = null;
+	var origin = null;
 
 	var options = {
 		id: id
@@ -105,10 +111,11 @@ function XMLHttpRequestProxy(){
 	this.open = function(method, url, async, username, password){
 		if(async === false) throw 'only asynchronous behavior is supported';
 
-		var match = reHost.exec(url);
+		url = resolveUrl(url);
+		var match = reOrigin.exec(url);
 		if(!match) throw 'invalid url';
 
-		host = match[1];
+		origin = match[0];
 
 		options.method = method
 		options.url = url
@@ -119,7 +126,7 @@ function XMLHttpRequestProxy(){
 	this.send = function(data) {
 		options.requestBody = data;
 		
-		window.openChannel(host, function(err, channel){
+		window.openChannel(origin, function(err, channel){
 			if(err) throw err;
 			
 			channel.proxies[id] = proxy;
