@@ -55,6 +55,7 @@ window.openChannel = function(host, cb){
 
 	channel.iframe = document.createElement('iframe');
 	channel.iframe.src = channel.iframeUrl;
+	channel.style.display = 'none';
 	document.scripts[0].parentNode.insertBefore(channel.iframe, document.scripts[0]);	
 
 }//openChannel
