@@ -8,9 +8,10 @@ describe('jquery', function(){
 		})
 		.done(function(response){
 			expect(response).to.eql(["one", "two", "three"]);
+		})
+		.always(function(){
 			cb();
 		})
-		.fail(cb)
 		;
 					
 	});
