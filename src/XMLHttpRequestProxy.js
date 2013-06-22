@@ -50,7 +50,7 @@ function registerChannel(iframeUrl) {
 		proxy.statusText = state.statusText;
 		proxy.responseText = state.responseBody;
 		proxy.getAllResponseHeaders = function() {
-			return state.responseHead;
+			return state.responseHeaders;
 		}
 		proxy.onreadystatechange.apply(proxy);
 	}

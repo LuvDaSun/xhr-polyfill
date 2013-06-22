@@ -3,7 +3,7 @@ else window.addEventListener("message", window_onmessage, false);
 
 function window_onmessage(e){
 	var message = e.data;
-	
+
 	if(e.source !== window.parent) return;
 
 	if(typeof message !== 'string') return;
@@ -12,9 +12,7 @@ function window_onmessage(e){
 	message = JSON.parse(e.data);
 	
 	xhr(message, function(state) {
-
 		window.parent.postMessage(JSON.stringify(state), '*');
-
 	});
 
 }
@@ -42,7 +40,7 @@ function xhr(options, statechange){
 
 			case 4:
 			state.responseBody = this.responseText;
-			state.responseHead = this.getAllResponseHeaders();
+			state.responseHeaders = this.getAllResponseHeaders();
 			state.statusCode = this.status;
 			state.statusText = this.statusText;
 			break;
