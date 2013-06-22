@@ -133,7 +133,7 @@ function XMLHttpRequestProxy(){
 			if(err) throw err;
 			
 			channel.proxies[id] = proxy;
-			channel.iframe.contentWindow.postMessage(JSON.stringify(options), '*');
+			channel.iframe.contentWindow.postMessage(JSON.stringify(options), channel.origin);
 		})
 	}
 	this.abort = function() {
