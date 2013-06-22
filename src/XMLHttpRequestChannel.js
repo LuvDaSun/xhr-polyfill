@@ -1,21 +1,12 @@
-if(window.attachEvent) window.attachEvent("onmessage", window_onmessage);
-else window.addEventListener("message", window_onmessage, false);
+bindEvent(window, 'message', function(e){
+	var message;
 
-function window_onmessage(e){
-	var message = e.data;
+	if(!(message = receiveMessage(e, window.parent))) return;
 
-	if(e.source !== window.parent) return;
-
-	if(typeof message !== 'string') return;
-	if(message[0] !== '{') return;
-
-	message = JSON.parse(e.data);
-	
 	xhr(message, function(state) {
 		window.parent.postMessage(JSON.stringify(state), '*');
 	});
-
-}//window_onmessage
+});
 
 
 function xhr(options, statechange){

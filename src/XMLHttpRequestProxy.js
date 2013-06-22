@@ -1,31 +1,18 @@
 var reOrigin = /^(?:\w+\:)?(?:\/\/)([^\/]*)/;
 var channels = {};
 
-if(window.attachEvent) window.attachEvent("onmessage", window_onmessage);
-else window.addEventListener("message", window_onmessage, false);
-
-function window_onmessage(e){
-	var message = e.data;
+bindEvent(window, 'message', function(e){
+	var message, channel;
 	
 	if(!(e.origin in channels)) return;
+	channel = channels[e.origin];
 
-	var channel = channels[e.origin];
+	if(!(message = receiveMessage(e, channel.iframe.contentWindow))) return;
 
-	if(e.source !== channel.iframe.contentWindow) return;
-
-	if(typeof message !== 'string') return;
-	if(message[0] !== '{') return;
-
-	message = JSON.parse(e.data);
-	
 	channel.statechange(message);
-}
+});
 
-function resolveUrl(url) {
-	var a = document.createElement('a');
-	a.href = url;
-	return a.href;
-}
+
 
 function registerChannel(iframeUrl) {
 	iframeUrl = resolveUrl(iframeUrl);
@@ -81,17 +68,14 @@ function openChannel(origin, cb){
 
 	channel.iframe = document.createElement('iframe');
 
-	function channel_onload(){
+	bindEvent(channel.iframe, 'load', function(e) {
 		var cb;
 
 		channel.ready = true;
 		while(cb = channel.callbackQueue.shift()) {
 			cb(null, channel);
 		}
-	}//onload
-
-	if(channel.iframe.attachEvent) channel.iframe.attachEvent("onload", channel_onload);
-	else channel.iframe.addEventListener("load", channel_onload, false);
+	})
 	
 	channel.iframe.src = channel.iframeUrl;
 	channel.iframe.style.display = 'none';

@@ -32,3 +32,35 @@ function parseHeaders(headers) {
 	return headers;
 
 }//parseHeaders
+
+function bindEvent(target, eventName, handler) {
+	
+	if(target.attachEvent) target.attachEvent("on" + eventName, handler);
+	else target.addEventListener(eventName, handler, false);
+
+}//bindEvent
+
+function resolveUrl(url) {
+	var a = document.createElement('a');
+	a.href = url;
+	return a.href;
+}//resolveUrl
+
+
+function receiveMessage(e, source) {
+	var message;
+
+	if(e.source !== source) return null;
+
+	message = e.data;
+	
+	if(typeof message === 'string') {
+		if(message[0] !== '{') return null;
+		
+		message = JSON.parse(message);
+	}
+
+	if(typeof message !== 'object') return null;
+	
+	return message;
+}//receiveMessage
