@@ -15,11 +15,12 @@ function window_onmessage(e){
 		window.parent.postMessage(JSON.stringify(state), '*');
 	});
 
-}
+}//window_onmessage
 
 
 function xhr(options, statechange){
-
+	var headerName;
+	
 	var xhr = new (window.XMLHttpRequest || function() {
 		try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
 		try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
@@ -52,9 +53,9 @@ function xhr(options, statechange){
 	}
 	xhr.open(options.method, options.url, true, options.username, options.password);
 	if(options.requestHeaders) {
-		for(var headerName in options.requestHeaders) {
+		for(headerName in parseHeaders(options.requestHeaders)) {
 			xhr.setRequestHeader(headerName, options.requestHeaders[headerName]);
 		}
 	}
 	xhr.send(options.requestBody);
-}
+}//window_onmessage

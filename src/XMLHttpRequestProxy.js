@@ -39,9 +39,13 @@ function registerChannel(iframeUrl) {
 	}
 
 	channel.statechange = function(state){
+		var proxy;
+		var responseHeaders;
+
 		if(!(state.id in channel.proxies)) return;
 
-		var proxy = channel.proxies[state.id];
+		proxy = channel.proxies[state.id];
+		responseHeaders = parseHeaders(state.responseHeaders)
 
 		if(state.readyState === 4) delete channel.proxies[state.id];
 
@@ -49,11 +53,18 @@ function registerChannel(iframeUrl) {
 		proxy.status = state.statusCode;
 		proxy.statusText = state.statusText;
 		proxy.responseText = state.responseBody;
+
 		proxy.getAllResponseHeaders = function() {
 			return state.responseHeaders;
 		}
+		proxy.getResponseHeader = function(name) {
+			name = name.toLowerCase();
+			if(!(name in responseHeaders)) return undefined
+			return responseHeaders[name];
+		}
 		proxy.onreadystatechange.apply(proxy);
 	}
+
 	channels[channel.origin] = channel;
 }//registerChannel
 
@@ -96,7 +107,6 @@ function XMLHttpRequestProxy(){
 	var id = (++idSequence).toString(36);
 	var proxy = this;
 	var origin = null;
-	var responseHeaders = null;
 
 	var options = {
 		id: id
@@ -142,33 +152,14 @@ function XMLHttpRequestProxy(){
 		});
 	}
 
-
 	this.setRequestHeader = function(name, value) {
 		options.requestHeaders[name] = value;
 	}
 	this.getAllResponseHeaders = function() {
-		return '';
+		return;
 	}
 	this.getResponseHeader = function(name) {
-		var parts, partCount, partIndex, part;
-		var match;
-
-		if(!responseHeaders) {
-			parts = this.getAllResponseHeaders().split(/\r\n/);
-			partCount = parts.length;
-
-			responseHeaders = {};
-
-			for(partIndex = 0; partIndex < partCount; partIndex++) {
-				part = parts[partIndex];
-				match = /^(.+?)\:\s*(.+)$/.exec(part);
-				if(!match) continue;
-
-				responseHeaders[match[1].toLowerCase()] = match[2];
-			}
-		}
-
-		return responseHeaders[name.toLowerCase()];
+		return;
 	}
 
 }//XMLHttpRequestProxy
