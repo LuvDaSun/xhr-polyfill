@@ -1,4 +1,3 @@
-var reOrigin = /^(?:\w+\:)?(?:\/\/)([^\/]*)/;
 var channels = {};
 
 bindEvent(window, 'message', function(e){
@@ -16,11 +15,9 @@ bindEvent(window, 'message', function(e){
 
 function registerChannel(iframeUrl) {
 	iframeUrl = resolveUrl(iframeUrl);
-	var match = reOrigin.exec(iframeUrl);
-	if(!match) throw 'invalid iframeUrl';
 
 	var channel = {
-		origin: match[0]
+		origin: getOrigin(iframeUrl)
 		, iframeUrl: iframeUrl
 		, proxies: {}
 	}

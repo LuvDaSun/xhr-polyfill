@@ -21,10 +21,7 @@ function XMLHttpRequestProxy(){
 		if(async === false) throw 'only asynchronous behavior is supported';
 
 		url = resolveUrl(url);
-		var match = reOrigin.exec(url);
-		if(!match) throw 'invalid url';
-
-		origin = match[0];
+		origin = getOrigin(url);
 
 		options.method = method
 		options.url = url

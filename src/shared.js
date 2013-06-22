@@ -1,3 +1,10 @@
+function getOrigin(url) {
+	var match;
+	match = /^(?:\w+\:)?(?:\/\/)([^\/]*)/.exec(url);
+	if(!match) throw 'invalid url';
+	return match[0];
+}//getOrigin
+
 function parseHeaders(headers) {
 	var headerIndex, headerName, parseHeaders;
 	var match;
