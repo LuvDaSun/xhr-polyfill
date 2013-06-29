@@ -41,10 +41,25 @@ function parseHeaders(headers) {
 }//parseHeaders
 
 function bindEvent(target, eventName, handler) {
-	
-	if(target.attachEvent) target.attachEvent("on" + eventName, handler);
-	else target.addEventListener(eventName, handler, false);
+	var onEventName = 'on' + eventName;
+	var previousHandler;
+	if('addEventListener' in target) return target.addEventListener(eventName, handler, false);
+	if('attachEvent' in target) return target.attachEvent(onEventName, handler);
 
+	if(onEventName in target) {
+		previousHandler = target[onEventName];
+		target[onEventName] = previousHandler
+		? function() {
+			previousHandler.apply(this, arguments);
+			handler.apply(this, arguments);
+		}
+		: handler
+		;
+
+		return;
+	}
+
+	throw "could not bind to event '" + eventName + "'";
 }//bindEvent
 
 function resolveUrl(url) {
