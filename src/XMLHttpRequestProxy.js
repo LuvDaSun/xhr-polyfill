@@ -86,7 +86,7 @@ function XMLHttpRequestProxy(){
 		channel.send(options);
 	}
 	this.abort = function() {
-		delete proxies[e.id];
+		delete proxies[id];
 	}
 
 	this.setRequestHeader = function(name, value) {
