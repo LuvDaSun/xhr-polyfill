@@ -1,4 +1,4 @@
-var channels = {};
+// var channels = {};
 
 bindEvent(window, 'message', function(e){
 	var message, channel;
@@ -8,17 +8,17 @@ bindEvent(window, 'message', function(e){
 
 	if(!(message = receiveMessage(e, channel.iframe.contentWindow))) return;
 
-	channel.onreceive(message);
+	channel.onreceive && channel.onreceive(message);
 });
 
-IFrameChannel.get = function(url) {
-	var origin;
-	url = resolveUrl(url);
-	origin = getOrigin(url);
-	if(!(origin in channels)) channels[origin] = new IFrameChannel(url);
+// IFrameChannel.get = function(url) {
+// 	var origin;
+// 	url = resolveUrl(url);
+// 	origin = getOrigin(url);
+// 	if(!(origin in channels)) channels[origin] = new IFrameChannel(url);
 
-	channels[channel.origin] = channel;
-}//get
+// 	channels[channel.origin] = channel;
+// }//get
 
 function IFrameChannel(url) {
 	var channel = this;
@@ -33,7 +33,7 @@ function IFrameChannel(url) {
 			messageQueue.push(message);
 		}//send
 
-		var iframe = document.createElement('iframe');
+		channel.iframe = document.createElement('iframe');
 		bindEvent(channel.iframe, 'load', function(e) {
 			var message;
 
@@ -47,15 +47,13 @@ function IFrameChannel(url) {
 			messageQueue = null;
 		})
 		
-		channel.iframe.src = channel.iframeUrl;
+		channel.iframe.src = url;
 		channel.iframe.style.display = 'none';
 		document.scripts[0].parentNode.insertBefore(channel.iframe, document.scripts[0]);	
 
 	}//send
 	
-	this.onreceive = function(message) {
-		throw 'not implemented';
-	}//onreceive
+	this.onreceive = null;
 
 }//IFrameChannel
 

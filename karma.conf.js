@@ -4,7 +4,7 @@ files = [
 	MOCHA, MOCHA_ADAPTER
 	, 'components/expect/expect.js'
 	, 'components/jquery/jquery.js'
-	, 'src/shared.js', 'src/XMLHttpRequestChannel.js', 'src/XMLHttpRequestProxy.js'
+	, 'src/shared.js', 'src/IFrameChannel.js', 'src/XMLHttpRequestChannel.js', 'src/XMLHttpRequestProxy.js'
 	, 'test/**.js'
 ];
 
