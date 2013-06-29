@@ -37,7 +37,6 @@ function parseHeaders(headers) {
 	}
 
 	return headers;
-
 }//parseHeaders
 
 function bindEvent(target, eventName, handler) {
@@ -67,7 +66,6 @@ function resolveUrl(url) {
 	a.href = url;
 	return a.href;
 }//resolveUrl
-
 
 function receiveMessage(e, source) {
 	var message;

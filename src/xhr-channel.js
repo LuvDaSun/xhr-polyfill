@@ -8,7 +8,6 @@ bindEvent(window, 'message', function(e){
 	});
 });
 
-
 function xhr(options, statechange){
 	var headerName;
 	
@@ -42,11 +41,15 @@ function xhr(options, statechange){
 		}
 		statechange(state)
 	}
+
 	xhr.open(options.method, options.url, true, options.username, options.password);
+
 	if(options.requestHeaders) {
 		for(headerName in parseHeaders(options.requestHeaders)) {
 			xhr.setRequestHeader(headerName, options.requestHeaders[headerName]);
 		}
 	}
+
 	xhr.send(options.requestBody);
-}//window_onmessage
+}//xhr
+

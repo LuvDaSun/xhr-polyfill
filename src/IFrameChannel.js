@@ -1,5 +1,3 @@
-// var channels = {};
-
 bindEvent(window, 'message', function(e){
 	var message, channel;
 	
@@ -10,15 +8,6 @@ bindEvent(window, 'message', function(e){
 
 	channel.onreceive && channel.onreceive(message);
 });
-
-// IFrameChannel.get = function(url) {
-// 	var origin;
-// 	url = resolveUrl(url);
-// 	origin = getOrigin(url);
-// 	if(!(origin in channels)) channels[origin] = new IFrameChannel(url);
-
-// 	channels[channel.origin] = channel;
-// }//get
 
 function IFrameChannel(url) {
 	var channel = this;
