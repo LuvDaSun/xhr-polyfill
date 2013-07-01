@@ -3,7 +3,8 @@ basePath = '';
 files = [
 	MOCHA, MOCHA_ADAPTER
 	, 'components/expect/expect.js'
-	, 'src/XMLHttpRequestChannel.js', 'src/XMLHttpRequestProxy.js'
+	, 'components/jquery/jquery.js'
+	, 'src/shared.js', 'src/IFrameChannel.js', 'src/XMLHttpRequestProxy.js'
 	, 'test/**.js'
 ];
 

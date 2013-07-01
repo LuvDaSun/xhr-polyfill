@@ -1,12 +1,13 @@
 {
   "name": "xhr-polyfill",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "ignore": [
     "**/.*",
     "node_modules",
     "components"
   ],
   "devDependencies": {
-    "expect": "~0.2"
+    "expect": "~0.2",
+    "jquery": "~1"
   }
 }

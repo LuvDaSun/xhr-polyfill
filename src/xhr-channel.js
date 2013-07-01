@@ -1,51 +1,16 @@
-var messageHandlers = {
-	"xhr-call": function(request) {
-		xhr(request, function(state) {
-
-			window.parent.postMessage(JSON.stringify({
-				type: 'xhr-statechange'
-				, host: location.host
-				, arguments: [state]
-			}), '*');
-
-		});
-	}
-}
-
-if(window.attachEvent) window.attachEvent("onmessage", window_onmessage);
-else window.addEventListener("message", window_onmessage, false);
-
-function window_onmessage(e){
+bindEvent(window, 'message', function(e){
 	var message;
 
-	try {
-		message = JSON.parse(e.data);
-	}
-	catch(err) {
-		return;
-	}
-	
-	if(!(message.type in messageHandlers)) return;
+	if(!(message = receiveMessage(e, window.parent))) return;
 
-	messageHandlers[message.type].apply(null, message.arguments);
-}
-
-if(window.attachEvent) window.attachEvent("onload", window_load);
-else window.addEventListener("load", window_load, false);
-
-function window_load(e){
-
-	window.parent.postMessage(JSON.stringify({
-		type: 'xhr-ready'
-		, arguments: []
-	}), '*');
-
-}
-
-
+	xhr(message, function(state) {
+		window.parent.postMessage(JSON.stringify(state), '*');
+	});
+});
 
 function xhr(options, statechange){
-
+	var headerName;
+	
 	var xhr = new (window.XMLHttpRequest || function() {
 		try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
 		try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
@@ -66,7 +31,7 @@ function xhr(options, statechange){
 
 			case 4:
 			state.responseBody = this.responseText;
-			state.responseHead = this.getAllResponseHeaders();
+			state.responseHeaders = this.getAllResponseHeaders();
 			state.statusCode = this.status;
 			state.statusText = this.statusText;
 			break;
@@ -76,11 +41,15 @@ function xhr(options, statechange){
 		}
 		statechange(state)
 	}
+
 	xhr.open(options.method, options.url, true, options.username, options.password);
+
 	if(options.requestHeaders) {
-		for(var headerName in options.requestHeaders) {
+		for(headerName in parseHeaders(options.requestHeaders)) {
 			xhr.setRequestHeader(headerName, options.requestHeaders[headerName]);
 		}
 	}
+
 	xhr.send(options.requestBody);
-}
+}//xhr
+

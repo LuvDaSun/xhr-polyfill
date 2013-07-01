@@ -1,104 +1,61 @@
-var reOrigin = /^(?:\w+\:)?(?:\/\/)([^\/]*)/;
 var channels = {};
-
-function resolveUrl(url) {
-	var a = document.createElement('a');
-	a.href = url;
-	return a.href;
-}
-
-function registerChannel(iframeUrl) {
-	iframeUrl = resolveUrl(iframeUrl);
-	var match = reOrigin.exec(iframeUrl);
-	if(!match) throw 'invalid iframeUrl';
-
-	var channel = {
-		origin: match[0]
-		, iframeUrl: iframeUrl
-		, proxies: {}
-	}
-
-	channel.messageHandlers = {
-		"xhr-ready": function(){
-			var cb;
-
-			channel.ready = true;
-			while(cb = channel.callbackQueue.shift()) {
-				cb(null, channel);
-			}
-		}
-		, "xhr-statechange": function(state){
-			if(!(state.id in channel.proxies)) return;
-
-			var proxy = channel.proxies[state.id];
-
-			if(state.readyState === 4) delete channel.proxies[state.id];
-
-			proxy.readyState = state.readyState;
-			proxy.status = state.statusCode;
-			proxy.statusText = state.statusText;
-			proxy.responseText = state.responseBody;
-			proxy.getAllResponseHeaders = function() {
-				return state.responseHead;
-			}
-			proxy.onreadystatechange.apply(proxy);
-		}
-	}
-	channels[channel.origin] = channel;
-}//registerChannel
-
-window.openChannel = function(origin, cb){
-	if(!(origin in channels)) return cb('unknown origin', null);
-
-	var channel = channels[origin];
-
-	if(channel.ready) return cb(null, channel);
-
-	if('callbackQueue' in channel) return channel.callbackQueue.push(cb);
-
-	channel.callbackQueue = [cb];
-
-	channel.iframe = document.createElement('iframe');
-	channel.iframe.src = channel.iframeUrl;
-	channel.iframe.style.display = 'none';
-	document.scripts[0].parentNode.insertBefore(channel.iframe, document.scripts[0]);	
-
-}//openChannel
-
-if(window.attachEvent) window.attachEvent("onmessage", window_onmessage);
-else window.addEventListener("message", window_onmessage, false);
-
-function window_onmessage(e){
-	var message;
-
-	if(!(e.origin in channels)) return;
-
-	var channel = channels[e.origin];
-
-	try {
-		message = JSON.parse(e.data);
-	}
-	catch(err) {
-		return;
-	}
-	
-	if(!(message.type in channel.messageHandlers)) return;
-
-	channel.messageHandlers[message.type].apply(null, message.arguments);
-}
-
-
-
+var proxies = {};
 var idSequence = 0;
+
+function ensureChannel(url) {
+	var origin;
+	url = resolveUrl(url);
+	origin = getOrigin(url);
+	if(!(origin in channels)) channels[origin] = createChannel(url);
+
+	return channels[origin];
+}//ensureChannel
+
+function createChannel(url){
+	var channel = new IFrameChannel(url);
+
+	bindEvent(channel, 'receive', function(e){
+		var proxy;
+		var responseHeaders;
+
+		if(!(e.id in proxies)) return false;
+
+		proxy = proxies[e.id]
+		responseHeaders = parseHeaders(e.responseHeaders)
+
+		if(e.readyState === 4) delete proxies[e.id];
+
+		proxy.readyState = e.readyState;
+		proxy.status = e.statusCode;
+		proxy.statusText = e.statusText;
+		proxy.responseText = e.responseBody;
+
+		proxy.getAllResponseHeaders = function() {
+			return e.responseHeaders;
+		}
+		proxy.getResponseHeader = function(name) {
+			name = name.toLowerCase();
+			if(!(name in responseHeaders)) return undefined
+			return responseHeaders[name];
+		}
+		proxy.onreadystatechange && proxy.onreadystatechange.apply(proxy);
+
+	})
+	return channel;
+}//createChannel
+
 function XMLHttpRequestProxy(){
 	var id = (++idSequence).toString(36);
 	var proxy = this;
 	var origin = null;
+	var channel = null;
 
 	var options = {
 		id: id
 		, requestHeaders: {}
 	}
+
+	proxies[id] = this;
 
 	this.onreadystatechange = null
 	this.readyState = 0;
@@ -112,10 +69,7 @@ function XMLHttpRequestProxy(){
 		if(async === false) throw 'only asynchronous behavior is supported';
 
 		url = resolveUrl(url);
-		var match = reOrigin.exec(url);
-		if(!match) throw 'invalid url';
-
-		origin = match[0];
+		origin = getOrigin(url);
 
 		options.method = method
 		options.url = url
@@ -124,36 +78,25 @@ function XMLHttpRequestProxy(){
 	}
 	
 	this.send = function(data) {
+
+		channel = ensureChannel(origin + '/xhr-channel.html');
+
 		options.requestBody = data;
 		
-		window.openChannel(origin, function(err, channel){
-			if(err) throw err;
-			
-			channel.proxies[id] = proxy;
-			channel.iframe.contentWindow.postMessage(JSON.stringify({
-				type: 'xhr-call'
-				, arguments: [options]
-			}), '*');
-		})
+		channel.send(options);
 	}
 	this.abort = function() {
-		getXhr(function(err, xhr){
-			xhr.abort();
-		});
+		delete proxies[id];
 	}
-
 
 	this.setRequestHeader = function(name, value) {
 		options.requestHeaders[name] = value;
 	}
 	this.getAllResponseHeaders = function() {
-		return '';
+		return;
 	}
 	this.getResponseHeader = function(name) {
-		var re = new RegExp('^' + name + '\\:\\s*(.*)$', 'gim');
-		var match = re.exec(this.getAllresponseHeaders());
-		if(!match) return '';
-		else return match[1];
+		return;
 	}
 
 }//XMLHttpRequestProxy
