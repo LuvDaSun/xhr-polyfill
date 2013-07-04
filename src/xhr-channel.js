@@ -10,7 +10,8 @@ bindEvent(window, 'message', function(e){
 
 function xhr(options, statechange){
 	var headerName;
-	
+	var headers;
+
 	var xhr = new (window.XMLHttpRequest || function() {
 		try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
 		try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
@@ -45,8 +46,9 @@ function xhr(options, statechange){
 	xhr.open(options.method, options.url, true, options.username, options.password);
 
 	if(options.requestHeaders) {
-		for(headerName in parseHeaders(options.requestHeaders)) {
-			xhr.setRequestHeader(headerName, options.requestHeaders[headerName]);
+		headers = parseHeaders(options.requestHeaders);
+		for(headerName in headers) {
+			xhr.setRequestHeader(headerName, headers[headerName]);
 		}
 	}
 
