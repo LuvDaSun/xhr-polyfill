@@ -90,6 +90,7 @@ function XMLHttpRequestProxy(){
 	}
 
 	this.setRequestHeader = function(name, value) {
+		name = name.toLowerCase();
 		options.requestHeaders[name] = value;
 	}
 	this.getAllResponseHeaders = function() {
