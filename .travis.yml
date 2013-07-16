@@ -2,12 +2,3 @@ language: node_js
 
 node_js:
   - "0.8"
-
-before_install:
-  - sudo npm install browserstack -g
-
-before_script:
-  - ./forever start server.js
-
-after_script:
-  - ./forever stop server.js

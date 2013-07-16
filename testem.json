@@ -10,42 +10,9 @@
 	]
 
 	, "on_start": {
-		"command": "java -jar BrowserStackTunnel.jar BRSTK_KEY localhost,<port>,0,localhost,8080,0"
-		, "wait_for_text": "Press Ctrl-C to exit"
+		"command": "node server"
+		, "wait_for_text": "server listening on port 8080"
 	}
-	
-	
-	, "launchers": {
-		"bs_ie6": {
-			"protocol": "browser"
-			, "command": "browserstack launch --attach ie:6 <url>"
-		}
-
-		, "bs_ie7": {
-			"protocol": "browser"
-			, "command": "browserstack launch --attach ie:7 <url>"
-		}
-
-		, "bs_ie8": {
-			"protocol": "browser"
-			, "command": "browserstack launch --attach ie:8 <url>"
-		}
-
-		, "bs_ie9": {
-			"protocol": "browser"
-			, "command": "browserstack launch --attach ie:9 <url>"
-		}
-
-		, "bs_ie10": {
-			"protocol": "browser"
-			, "command": "browserstack launch --attach ie:10 <url>"
-		}
-	}
-
-	, "launch_in_ci": [
-		"PhantomJS"
-		, "bs_ie9", "bs_ie10"
-	]
 	
 	, "launch_in_dev": [
 		"PhantomJS"

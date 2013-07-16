@@ -6,8 +6,7 @@
   "devDependencies": {
     "bower": "~0.9",
     "connect": "~2",
-    "testem": "~0.3",
-    "forever": "~0.10"
+    "testem": "~0.3"
   },
   "scripts": {
     "test": "testem ci",
