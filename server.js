@@ -16,6 +16,7 @@ connect()
 })
 .use(connect.static('src'))
 .use(connect.static('test'))
-.listen(serverPort)
+.listen(serverPort, function(){
+	console.log('server listening on port ' + serverPort);
+})
 ;
-console.log('server listening on port ' + serverPort);
