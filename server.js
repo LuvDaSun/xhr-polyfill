@@ -1,6 +1,5 @@
 var connect = require('connect');
-var karma = require('karma');
-var serverPort = 9877;
+var serverPort = 8080;
 
 process.chdir(__dirname);
 

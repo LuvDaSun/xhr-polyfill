@@ -4,7 +4,7 @@ describe('jquery', function(){
 
 		jQuery
 		.ajax({
-			url: '//' + location.hostname + ':9877/data.json'
+			url: '//' + location.hostname + ':8080/data.json'
 		})
 		.done(function(response){
 			expect(response).to.eql(["one", "two", "three"]);
