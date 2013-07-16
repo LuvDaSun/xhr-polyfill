@@ -4,4 +4,7 @@ node_js:
   - "0.8"
 
 before_script:
-  - node server
+  - ./forever start server
+
+after_script:
+  - ./forever stop server
