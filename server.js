@@ -1,5 +1,4 @@
 var connect = require('connect');
-var karma = require('karma');
 var serverPort = 8080;
 
 process.chdir(__dirname);
@@ -17,6 +16,7 @@ connect()
 })
 .use(connect.static('src'))
 .use(connect.static('test'))
-.listen(serverPort)
+.listen(serverPort, function(){
+	console.log('server listening on port ' + serverPort);
+})
 ;
-console.log('server listening on port ' + serverPort);
