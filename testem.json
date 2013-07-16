@@ -9,16 +9,10 @@
 		, "test/**/*.js"
 	]
 
-	, "on_start": [
-		{
-			"command": "node server"
-			, "wait_for_text": "server listening on port 8080"
-		}
-		, {
-			"command": "java -jar BrowserStackTunnel.jar BRSTK_KEY localhost,<port>,0,localhost,8080,0"
-			, "wait_for_text": "Press Ctrl-C to exit"
-		}
-	]
+	, "on_start": {
+		"command": "java -jar BrowserStackTunnel.jar BRSTK_KEY localhost,<port>,0,localhost,8080,0"
+		, "wait_for_text": "Press Ctrl-C to exit"
+	}
 	
 	
 	, "launchers": {

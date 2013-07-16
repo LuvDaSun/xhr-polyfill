@@ -4,7 +4,4 @@ node_js:
   - "0.8"
 
 before_script:
-- node server
-- sleep 3
-- java -jar tests/tools/BrowserStackTunnel.jar BRSTK_KEY localhost,9000,0
-- sleep 3
+  - node server

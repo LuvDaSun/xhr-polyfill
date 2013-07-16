@@ -7,9 +7,8 @@
     "karma": "~0.8",
     "bower": "~0.9",
     "connect": "~2",
-    "browserstack": "~0.2.0",
-    "testem": "~0.3.17",
-    "expectjs": "0.0.15"
+    "testem": "~0.3",
+    "expectjs": "0.0"
   },
   "scripts": {
     "test": "testem ci",
