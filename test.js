@@ -3,9 +3,32 @@ var child_process = require('child_process');
 
 process.chdir(__dirname);
 
-child_process.spawn('node', ['server'], {});
+var cp_server = child_process.fork('./server', [], { silent: false });
+cp_server.on('message', messageListener);
 
-karma.server.start({
-	configFile: 'karma.conf.js'
-	, singleRun: true
-});
+var finalExitCode = 0;
+
+function messageListener(message){
+	switch(message) {
+		case 'server started':
+		karma.server.start(
+			{
+				configFile: 'karma.conf.js'
+				, singleRun: true
+				, autoWatch: false
+			}
+			, function(exitCode) {
+				finalExitCode = exitCode;
+				cp_server.kill('SIGINT');
+			}
+		);
+		break;
+
+		case 'server stopped':
+		process.exit(finalExitCode);
+		break;
+	}
+
+
+}
+

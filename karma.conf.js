@@ -18,3 +18,5 @@ files = [
 // - PhantomJS
 // - IE (only Windows)
 browsers = ['PhantomJS'];
+
+autoWatch = true;

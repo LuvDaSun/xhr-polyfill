@@ -1,10 +1,10 @@
 var connect = require('connect');
-var serverPort = 8080;
+var port = 8080;
 
 process.chdir(__dirname);
 
-connect()
-.use(connect.logger('dev'))
+var app = connect()
+//.use(connect.logger('dev'))
 .use(function (req, res, next) {
 	res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
@@ -16,7 +16,23 @@ connect()
 })
 .use(connect.static('src'))
 .use(connect.static('test'))
-.listen(serverPort, function(){
-	console.log('server listening on port ' + serverPort);
-})
-;
+
+
+
+notify('starting server on port ' + port);
+var server = app.listen(port, function(){
+	notify('server started');
+});
+
+process.on('SIGINT', function(){
+	notify('stopping server on port ' + port);
+	server.close(function(){
+		notify('server stopped');
+		process.exit(0);
+	})
+});
+
+function notify(message){
+	console.log(message);
+	process.send && process.send(message);
+}
