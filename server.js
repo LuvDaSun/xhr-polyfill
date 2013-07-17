@@ -28,8 +28,7 @@ process.on('SIGINT', function(){
 	notify('stopping server on port ' + port);
 	server.close(function(){
 		notify('server stopped');
-		process.exit(0);
-	})
+	});
 });
 
 function notify(message){
