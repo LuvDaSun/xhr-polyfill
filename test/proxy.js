@@ -22,24 +22,60 @@ describe('proxy', function(){
 	it('burst should be ok', function(cb){
 		var countdown = 100;
 
-		function loop() {
+		next();
+
+		function next() {
+			var n = (countdown % 3).toString();
 			var xhr = new XMLHttpRequestProxy();
-			xhr.open('GET', '//' + location.hostname + ':8080/data' + (countdown % 3) + '.json', true);
+			xhr.open('GET', '//' + location.hostname + ':8080/data' + n + '.json?_' + countdown, true);
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4){
 
 					expect(xhr.status).to.be(200);
 					expect(xhr.getResponseHeader('Content-Type')).to.be('application/json');
+
+					expect(xhr.responseText).to.be(n);
 					
-					if(--countdown) loop();
-					else cb();
+					if(--countdown) return next();
+					
+					cb();
 				}
 			};
 			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 			xhr.send(null); 
 		}
 		
-		loop();
+	});
+
+	it('async burst should be ok', function(cb){
+		var countdown = 100;
+		var queue = countdown;
+
+		while(countdown--) {
+			next();
+		}
+
+		function next() {
+			var n = (countdown % 3).toString();
+			var xhr = new XMLHttpRequestProxy();
+			xhr.open('GET', '//' + location.hostname + ':8080/data' + n + '.json?_' + countdown, true);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4){
+
+					expect(xhr.status).to.be(200);
+					expect(xhr.getResponseHeader('Content-Type')).to.be('application/json');
+
+					expect(xhr.responseText).to.be(n);
+					
+					if(--queue) return;
+
+					cb();
+				}
+			};
+			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			xhr.send(null); 
+		}
+	
 	});
 
 	it('should be not found', function(cb){
