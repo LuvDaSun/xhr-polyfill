@@ -1,11 +1,10 @@
 var connect = require('connect');
-var karma = require('karma');
-var serverPort = 9877;
+var port = 8080;
 
 process.chdir(__dirname);
 
-connect()
-.use(connect.logger('dev'))
+var app = connect()
+//.use(connect.logger('dev'))
 .use(function (req, res, next) {
 	res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
@@ -17,6 +16,22 @@ connect()
 })
 .use(connect.static('src'))
 .use(connect.static('test'))
-.listen(serverPort)
-;
-console.log('server listening on port ' + serverPort);
+
+
+
+notify('starting server on port ' + port);
+var server = app.listen(port, function(){
+	notify('server started');
+});
+
+process.on('SIGINT', function(){
+	notify('stopping server on port ' + port);
+	server.close(function(){
+		notify('server stopped');
+	});
+});
+
+function notify(message){
+	console.log(message);
+	process.send && process.send(message);
+}

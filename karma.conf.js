@@ -2,6 +2,7 @@ basePath = '';
 
 files = [
 	MOCHA, MOCHA_ADAPTER
+	, 'mocha_setup.js'
 	, 'components/expect/expect.js'
 	, 'components/jquery/jquery.js'
 	, 'src/shared.js', 'src/IFrameChannel.js', 'src/XMLHttpRequestProxy.js'
@@ -17,3 +18,5 @@ files = [
 // - PhantomJS
 // - IE (only Windows)
 browsers = ['PhantomJS'];
+
+autoWatch = true;
