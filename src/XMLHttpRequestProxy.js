@@ -92,7 +92,6 @@ function XMLHttpRequestProxy(){
 		}
 	}
 	this.abort = function() {
-		delete proxies[id];
 	}
 
 	this.setRequestHeader = function(name, value) {
