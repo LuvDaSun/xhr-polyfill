@@ -5,7 +5,7 @@
     "**/.*",
     "node_modules",
     "components",
-    "coverage",
+    "coverage"
   ],
   "devDependencies": {
     "expect": "~0.2",
