@@ -14,35 +14,40 @@ function ensureChannel(url) {
 function createChannel(url){
 	var channel = new IFrameChannel(url);
 
-	bindEvent(channel, 'receive', function(e){
+	bindEvent(channel, 'receive', function(state) {
 		var proxy;
-		var responseHeaders;
 
-		if(!(e.id in proxies)) return false;
+		if(!(state.id in proxies)) return false;
 
-		proxy = proxies[e.id]
-		responseHeaders = parseHeaders(e.responseHeaders)
+		proxy = proxies[state.id]
 
-		if(e.readyState === 4) delete proxies[e.id];
+		if(state.readyState === 4) delete proxies[state.id];
 
-		proxy.readyState = e.readyState;
-		proxy.status = e.statusCode;
-		proxy.statusText = e.statusText;
-		proxy.responseText = e.responseBody;
-
-		proxy.getAllResponseHeaders = function() {
-			return e.responseHeaders;
-		}
-		proxy.getResponseHeader = function(name) {
-			name = name.toLowerCase();
-			if(!(name in responseHeaders)) return undefined
-			return responseHeaders[name];
-		}
-		proxy.onreadystatechange && proxy.onreadystatechange.apply(proxy);
-
+		xhrReceive(proxy, state);
 	})
 	return channel;
 }//createChannel
+
+function xhrReceive(proxy, state) {
+	var responseHeaders;
+
+	responseHeaders = parseHeaders(state.responseHeaders)
+
+	proxy.readyState = state.readyState;
+	proxy.status = state.statusCode;
+	proxy.statusText = state.statusText;
+	proxy.responseText = state.responseBody;
+
+	proxy.getAllResponseHeaders = function() {
+		return state.responseHeaders;
+	}
+	proxy.getResponseHeader = function(name) {
+		name = name.toLowerCase();
+		if(!(name in responseHeaders)) return undefined
+		return responseHeaders[name];
+	}
+	proxy.onreadystatechange && proxy.onreadystatechange(proxy);
+}//xhrReceive
 
 function XMLHttpRequestProxy(){
 	var id = (++idSequence).toString(36);
@@ -55,8 +60,6 @@ function XMLHttpRequestProxy(){
 		id: id
 		, requestHeaders: {}
 	}
-
-	proxies[id] = this;
 
 	this.onreadystatechange = null
 	this.readyState = 0;
@@ -83,9 +86,13 @@ function XMLHttpRequestProxy(){
 		options.requestBody = data;
 
 		if(localOrigin == origin) {
-			throw 'not implemented';
+			xhrSend(options, function(state){
+				xhrReceive(proxy, state);
+			});
 		}
 		else {
+			proxies[id] = this;
+
 			channel = ensureChannel(origin + '/xhr-channel.html');
 			
 			channel.send(options);
