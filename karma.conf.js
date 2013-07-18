@@ -1,5 +1,3 @@
-basePath = '';
-
 files = [
 	MOCHA, MOCHA_ADAPTER
 	, 'mocha_setup.js'
@@ -7,7 +5,18 @@ files = [
 	, 'components/jquery/jquery.js'
 	, 'src/shared.js', 'src/IFrameChannel.js', 'src/XMLHttpRequestProxy.js'
 	, 'test/**.js'
+	,  {pattern: 'src/**/*', watched: true, included: false, served: false}
 ];
+
+preprocessors = {
+  'src/**/*.js': 'coverage'
+};
+
+reporters = ['progress', 'coverage'];
+
+proxies = {
+  '/local/': 'http://localhost:8080/'
+};
 
 // Start these browsers, currently available:
 // - Chrome
