@@ -8,6 +8,12 @@ files = [
 	,  {pattern: 'src/**/*', watched: true, included: false, served: false}
 ];
 
+preprocessors = {
+  'src/**/*.js': 'coverage'
+};
+
+reporters = ['progress', 'coverage'];
+
 proxies = {
   '/local/': 'http://localhost:8080/'
 };
