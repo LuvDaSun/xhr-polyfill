@@ -93,5 +93,32 @@ describe('proxy', function(){
 		xhr.send(null); 
 	});
 
+	it('local reqeuests should not use xhr-channel', function(cb){
+
+		/*
+		http://localhost:9876/local/ is a proxy for http://localhost:8080/
+		http://localhost:9876/local/xhr-channel.html will exist
+		http://localhost:9876/xhr-channel.html will not exist
+
+		a local request (http://localhost:9876/local/) should not look for the xht-channel file (http://localhost:9876/xhr-channel.html)
+		*/
+
+		var xhr = new XMLHttpRequestProxy();
+		xhr.open('GET', '/local/data.json', true);
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4){				
+
+				expect(xhr.status).to.be(200);
+				expect(xhr.getResponseHeader('Content-Type')).to.be('application/json');
+				expect(xhr.responseText).to.be('["one", "two", "three"]');
+				
+				cb();
+			}
+		};
+		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		xhr.send(null); 
+
+	});
+
 
 });
