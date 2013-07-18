@@ -48,6 +48,7 @@ function XMLHttpRequestProxy(){
 	var id = (++idSequence).toString(36);
 	var proxy = this;
 	var origin = null;
+	var localOrigin = getOrigin(location.href);;
 	var channel = null;
 
 	var options = {
@@ -79,11 +80,16 @@ function XMLHttpRequestProxy(){
 	
 	this.send = function(data) {
 
-		channel = ensureChannel(origin + '/xhr-channel.html');
-
 		options.requestBody = data;
-		
-		channel.send(options);
+
+		if(localOrigin == origin) {
+			throw 'not implemented';
+		}
+		else {
+			channel = ensureChannel(origin + '/xhr-channel.html');
+			
+			channel.send(options);
+		}
 	}
 	this.abort = function() {
 		delete proxies[id];
