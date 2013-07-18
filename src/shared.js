@@ -85,11 +85,14 @@ function receiveMessage(e, source) {
 	return message;
 }//receiveMessage
 
+
+var originalXMLHttpRequest = typeof XMLHttpRequest === 'undefined' ? null : XMLHttpRequest;
+
 function xhrSend(options, statechange){
 	var headerName;
 	var headers;
 
-	var xhr = new (window.XMLHttpRequest || function() {
+	var xhr = new (originalXMLHttpRequest || function() {
 		try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
 		try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
 		try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
