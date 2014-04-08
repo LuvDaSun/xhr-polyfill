@@ -1,8 +1,6 @@
 # xhr-polyfill
 
-* Master: [![Build Status](https://travis-ci.org/elmerbulthuis/xhr-polyfill.png?branch=master)](https://travis-ci.org/elmerbulthuis/xhr-polyfill)
-* Develop: [![Build Status](https://travis-ci.org/elmerbulthuis/xhr-polyfill.png?branch=develop)](https://travis-ci.org/elmerbulthuis/xhr-polyfill)
-
+[![Build Status](https://travis-ci.org/LuvDaSun/xhr-polyfill.svg)](https://travis-ci.org/LuvDaSun/xhr-polyfill)
 
 ## What is it?
 
@@ -12,7 +10,7 @@ xhr-polyfill is a polyfill that allows you to make cross domain request in ie8 /
 - add the server html file tou your server(s);
 - configure the client script.
 
-After you have done that you may usr the XMLHttpRequest object for making cross domain requests.
+After you have done that you may use the XMLHttpRequest object for making cross domain requests.
 
 
 ## How does it work?
