@@ -1,6 +1,5 @@
 {
   "name": "xhr-polyfill",
-  "version": "0.1.4",
   "ignore": [
     "**/.*",
     "node_modules",
