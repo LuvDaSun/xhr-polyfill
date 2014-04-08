@@ -9,7 +9,7 @@ install:
 - bower install --quiet
 before_script:
 - node server.js &
-- sleep 3
+- sleep 10
 script:
 - jshint .
 - karma start --browsers=PhantomJS,Firefox
