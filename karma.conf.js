@@ -3,12 +3,12 @@
 module.exports = function (config) {
 
     config.set({
-        basePath: '..',
+        basePath: '.',
         frameworks: ['mocha'],
         files: [
             'mocha_setup.js',
-            'components/expect/expect.js',
-            'components/jquery/jquery.js',
+            'bower_components/expect/expect.js',
+            'bower_components/jquery/dist/jquery.js',
             'src/shared.js',
             'src/IFrameChannel.js',
             'src/XMLHttpRequestProxy.js',

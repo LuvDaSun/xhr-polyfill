@@ -11,6 +11,10 @@ install:
 - npm install --quiet
 - bower install --quiet
 
+before_script:
+- node server.js > /dev/null &
+- sleep 3
+
 script:
 - jshint . -e .json
-- node test.js
+- karma start
