@@ -9,10 +9,10 @@ install:
 - bower install --quiet
 before_script:
 - node server.js &
-- sleep 10
+- sleep 5
 script:
 - jshint .
-- karma start --browsers=PhantomJS,Firefox
+- karma start --browsers=PhantomJS
 deploy:
   provider: npm
   email: elmerbulthuis@gmail.com
