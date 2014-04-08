@@ -1,20 +1,22 @@
 language: node_js
-
 node_js: '0.10'
-
 before_install:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
-
 install:
 - npm install jshint karma-cli --global --quiet
 - npm install --quiet
 - bower install --quiet
-
 before_script:
 - node server.js > /dev/null &
 - sleep 3
-
 script:
 - jshint . -e .json
-- karma start
+- karma start --browsers=PhantomJS,Firefox
+deploy:
+  provider: npm
+  email: elmerbulthuis@gmail.com
+  api_key:
+    secure: C9aIzUkPBzp0Ad/UOh9b50UQDoC/kn5ijFjXZ8BS7FGNdccZ6yS5X9bcozu4ZceRURRRvutf8dndEX46uevnzcZ3eUK9b4kIVit9Ae/ho3pvPaC/mOyzDQZk+vrMVcClON6qEAflx+G9W8XAf1yqNeAWMSFuw+0Adzk/YxjIYfk=
+  on:
+    tags: true

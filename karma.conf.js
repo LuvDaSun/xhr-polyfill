@@ -35,6 +35,10 @@ module.exports = function (config) {
             }]
         },
 
+        proxies: {
+            '/local/': 'http://localhost:8080/'
+        },
+
         autoWatch: false,
         singleRun: true,
         browsers: ['PhantomJS']
