@@ -1,10 +1,13 @@
-bindEvent(window, 'message', function(e){
-	var message;
+/* jshint browser: true */
 
-	if(!(message = receiveMessage(e, window.parent))) return;
+window.xhrPolyfill = window.xhrPolyfill || {};
 
-	xhrSend(message, function(state) {
-		window.parent.postMessage(JSON.stringify(state), '*');
-	});
+window.xhrPolyfill.bindEvent(window, 'message', function (e) {
+    var message;
+
+    if (!(message = window.xhrPolyfill.receiveMessage(e, window.parent))) return;
+
+    window.xhrPolyfill.xhrSend(message, function (state) {
+        window.parent.postMessage(JSON.stringify(state), '*');
+    });
 });
-

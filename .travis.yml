@@ -1,4 +1,16 @@
 language: node_js
 
-node_js:
-  - "0.8"
+node_js: '0.10'
+
+before_install:
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+
+install:
+- npm install jshint karma-cli --global --quiet
+- npm install --quiet
+- bower install --quiet
+
+script:
+- jshint . -e .json
+- node test.js

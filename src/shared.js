@@ -1,137 +1,143 @@
-function getOrigin(url) {
-	var match;
-	match = /^(?:\w+\:)?(?:\/\/)([^\/]*)/.exec(url);
-	if(!match) throw 'invalid url';
-	return match[0];
-}//getOrigin
+/* jshint browser: true */
 
-function parseHeaders(headers) {
-	var headerIndex, headerName, parseHeaders;
-	var match;
+window.xhrPolyfill = window.xhrPolyfill || {};
 
-	if(!headers) return {};
+window.xhrPolyfill.originalXMLHttpRequest = window.XMLHttpRequest;
 
-	if(typeof headers === 'string') {
-		headers = headers.split(/\r\n/);
-	}
+window.xhrPolyfill.getOrigin = function (url) {
+    var match;
+    match = /^(?:\w+\:)?(?:\/\/)([^\/]*)/.exec(url);
+    if (!match) throw 'invalid url';
+    return match[0];
+}; //getOrigin
 
+window.xhrPolyfill.parseHeaders = function (headers) {
+    var headerIndex, headerName, parsedHeaders;
+    var match;
 
-  	if(Object.prototype.toString.apply(headers) === '[object Array]') {
-		parseHeaders = {};
-		for(headerIndex = headers.length - 1; headerIndex >= 0; headerIndex--) {
-			match = /^(.+?)\:\s*(.+)$/.exec(headers[headerIndex]);
-			match && (parseHeaders[match[1]] = match[2]);
-		}
-		
-		headers = parseHeaders;
-		parseHeaders = null;
-	}
+    if (!headers) return {};
 
-	if(typeof headers === 'object') {
-		parseHeaders = {};
-		for(headerName in headers) {
-			parseHeaders[headerName.toLowerCase()] = headers[headerName];
-		}
-		headers = parseHeaders;
-		parseHeaders = null;
-	}
-
-	return headers;
-}//parseHeaders
-
-function bindEvent(target, eventName, handler) {
-	var onEventName = 'on' + eventName;
-	var previousHandler;
-	if('addEventListener' in target) return target.addEventListener(eventName, handler, false);
-	if('attachEvent' in target) return target.attachEvent(onEventName, handler);
-
-	if(onEventName in target) {
-		previousHandler = target[onEventName];
-		target[onEventName] = previousHandler
-		? function() {
-			previousHandler.apply(this, arguments);
-			handler.apply(this, arguments);
-		}
-		: handler
-		;
-
-		return;
-	}
-
-	throw "could not bind to event '" + eventName + "'";
-}//bindEvent
-
-function resolveUrl(url) {
-	var a = document.createElement('a');
-	a.href = url;
-	return a.href;
-}//resolveUrl
-
-function receiveMessage(e, source) {
-	var message;
-
-	if(e.source !== source) return null;
-
-	message = e.data;
-	
-	if(typeof message === 'string') {
-		if(message[0] !== '{') return null;
-		
-		message = JSON.parse(message);
-	}
-
-	if(typeof message !== 'object') return null;
-	
-	return message;
-}//receiveMessage
+    if (typeof headers === 'string') {
+        headers = headers.split(/\r\n/);
+    }
 
 
-var originalXMLHttpRequest = typeof XMLHttpRequest === 'undefined' ? null : XMLHttpRequest;
+    if (Object.prototype.toString.apply(headers) === '[object Array]') {
+        parsedHeaders = {};
+        for (headerIndex = headers.length - 1; headerIndex >= 0; headerIndex--) {
+            match = /^(.+?)\:\s*(.+)$/.exec(headers[headerIndex]);
+            match && (parsedHeaders[match[1]] = match[2]);
+        }
 
-function xhrSend(options, statechange){
-	var headerName;
-	var headers;
+        headers = parsedHeaders;
+        parsedHeaders = null;
+    }
 
-	var xhr = new (originalXMLHttpRequest || function() {
-		try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
-		try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
-		try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
-		throw new Error("This browser does not support XMLHttpRequest.");
-	})()
+    if (typeof headers === 'object') {
+        parsedHeaders = {};
+        for (headerName in headers) {
+            parsedHeaders[headerName.toLowerCase()] = headers[headerName];
+        }
+        headers = parsedHeaders;
+        parsedHeaders = null;
+    }
 
-	xhr.onreadystatechange = function(){
-		var state = {};
-		state.id = options.id
-		state.readyState = this.readyState;
-		switch(this.readyState){
+    return headers;
+}; //parseHeaders
 
-			case 1:
-			case 2:
-			case 3:
-			break;
+window.xhrPolyfill.bindEvent = function (target, eventName, handler) {
+    var onEventName = 'on' + eventName;
+    var previousHandler;
+    if ('addEventListener' in target) return target.addEventListener(eventName, handler, false);
+    if ('attachEvent' in target) return target.attachEvent(onEventName, handler);
 
-			case 4:
-			state.responseBody = this.responseText;
-			state.responseHeaders = this.getAllResponseHeaders();
-			state.statusCode = this.status;
-			state.statusText = this.statusText;
-			break;
+    if (onEventName in target) {
+        previousHandler = target[onEventName];
+        target[onEventName] = previousHandler ? function () {
+            previousHandler.apply(this, arguments);
+            handler.apply(this, arguments);
+        } : handler;
 
-			default:
-			throw 'invalid state'
-		}
-		statechange(state);
-	}
+        return;
+    }
 
-	xhr.open(options.method, options.url, true, options.username, options.password);
+    throw "could not bind to event '" + eventName + "'";
+}; //bindEvent
 
-	if(options.requestHeaders) {
-		headers = parseHeaders(options.requestHeaders);
-		for(headerName in headers) {
-			xhr.setRequestHeader(headerName, headers[headerName]);
-		}
-	}
+window.xhrPolyfill.resolveUrl = function (url) {
+    var a = document.createElement('a');
+    a.href = url;
+    return a.href;
+}; //resolveUrl
 
-	xhr.send(options.requestBody);
-}//xhr
+window.xhrPolyfill.receiveMessage = function (e, source) {
+    var message;
 
+    if (e.source !== source) return null;
+
+    message = e.data;
+
+    if (typeof message === 'string') {
+        if (message[0] !== '{') return null;
+
+        message = JSON.parse(message);
+    }
+
+    if (typeof message !== 'object') return null;
+
+    return message;
+}; //receiveMessage
+
+
+window.xhrPolyfill.xhrSend = function (options, statechange) {
+    var headerName;
+    var headers;
+
+    var xhr = window.xhrPolyfill.originalXMLHttpRequest ? new window.xhrPolyfill.originalXMLHttpRequest() : (function () {
+        try {
+            return new window.ActiveXObject("Msxml2.XMLHTTP.6.0");
+        } catch (e1) {}
+        try {
+            return new window.ActiveXObject("Msxml2.XMLHTTP.3.0");
+        } catch (e2) {}
+        try {
+            return new window.ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e3) {}
+        throw new Error("This browser does not support XMLHttpRequest.");
+    })();
+
+    xhr.onreadystatechange = function () {
+        var state = {};
+        state.id = options.id;
+        state.readyState = this.readyState;
+        switch (this.readyState) {
+
+        case 1:
+        case 2:
+        case 3:
+            break;
+
+        case 4:
+            state.responseBody = this.responseText;
+            state.responseHeaders = this.getAllResponseHeaders();
+            state.statusCode = this.status;
+            state.statusText = this.statusText;
+            break;
+
+        default:
+            throw new Error('invalid state');
+        }
+        statechange(state);
+    };
+
+    xhr.open(options.method, options.url, true, options.username, options.password);
+
+    if (options.requestHeaders) {
+        headers = window.xhrPolyfill.parseHeaders(options.requestHeaders);
+        for (headerName in headers) {
+            xhr.setRequestHeader(headerName, headers[headerName]);
+        }
+    }
+
+    xhr.send(options.requestBody);
+}; //xhr

@@ -1,5 +1,4 @@
 /* jshint browser: true */
-/* global XMLHttpRequestProxy */
 /* global describe, it, expect */
 
 describe('proxy', function () {
@@ -8,7 +7,7 @@ describe('proxy', function () {
 
         it('single request should be ok', function (cb) {
 
-            var xhr = new XMLHttpRequestProxy();
+            var xhr = new window.xhrPolyfill.XMLHttpRequestProxy();
             xhr.open('GET', '//' + location.hostname + ':8080/data.json', true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -32,7 +31,7 @@ describe('proxy', function () {
 
             function next() {
                 var n = (countdown % 3).toString();
-                var xhr = new XMLHttpRequestProxy();
+                var xhr = new window.xhrPolyfill.XMLHttpRequestProxy();
                 xhr.open('GET', '//' + location.hostname + ':8080/data' + n + '.json?_' + countdown, true);
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
@@ -63,7 +62,7 @@ describe('proxy', function () {
 
             function next() {
                 var n = (countdown % 3).toString();
-                var xhr = new XMLHttpRequestProxy();
+                var xhr = new window.xhrPolyfill.XMLHttpRequestProxy();
                 xhr.open('GET', '//' + location.hostname + ':8080/data' + n + '.json?_' + countdown, true);
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
@@ -85,7 +84,7 @@ describe('proxy', function () {
         });
 
         it('should be not found', function (cb) {
-            var xhr = new XMLHttpRequestProxy();
+            var xhr = new window.xhrPolyfill.XMLHttpRequestProxy();
             xhr.open('GET', '//' + location.hostname + ':8080/notfound.json', true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -113,7 +112,7 @@ describe('proxy', function () {
 			a local request (http://localhost:9876/local/) should not look for the xht-channel file (http://localhost:9876/xhr-channel.html)
 			*/
 
-            var xhr = new XMLHttpRequestProxy();
+            var xhr = new window.xhrPolyfill.XMLHttpRequestProxy();
             xhr.open('GET', '/local/data.json', true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {

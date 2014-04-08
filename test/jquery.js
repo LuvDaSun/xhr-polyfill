@@ -1,12 +1,11 @@
 /* jshint browser: true */
-/* global jQuery */
 /* global describe, it, expect */
 
 describe('jquery', function () {
 
     it('should be ok', function (cb) {
 
-        jQuery
+        window.jQuery
             .ajax({
                 url: '//' + location.hostname + ':8080/data.json'
             })
