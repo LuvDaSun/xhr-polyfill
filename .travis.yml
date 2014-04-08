@@ -8,7 +8,7 @@ install:
 - npm install --quiet
 - bower install --quiet
 before_script:
-- node server.js > /dev/null &
+- node server.js &
 - sleep 3
 script:
 - jshint .
