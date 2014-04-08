@@ -5,12 +5,10 @@
   "dependencies": {},
   "devDependencies": {
     "karma": "~0.8",
-    "bower": "~0.9",
     "connect": "~2"
   },
   "scripts": {
-    "test": "node test",
-    "install": "bower install"
+    "test": "node test"
   },
   "repository": "git://github.com/elmerbulthuis/xhr-polyfill.git",
   "author": "elmerbulthuis <elmerbulthuis@gmail.com>",
