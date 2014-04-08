@@ -1,20 +1,23 @@
-describe('jquery', function(){
+/* jshint browser: true */
+/* global jQuery */
+/* global describe, it, expect */
 
-	it('should be ok', function(cb){
+describe('jquery', function () {
 
-		jQuery
-		.ajax({
-			url: '//' + location.hostname + ':8080/data.json'
-		})
-		.done(function(response){
-			expect(response).to.eql(["one", "two", "three"]);
-		})
-		.always(function(){
-			cb();
-		})
-		;
-					
-	});
+    it('should be ok', function (cb) {
+
+        jQuery
+            .ajax({
+                url: '//' + location.hostname + ':8080/data.json'
+            })
+            .done(function (response) {
+                expect(response).to.eql(["one", "two", "three"]);
+            })
+            .always(function () {
+                cb();
+            });
+
+    });
 
 
 });
