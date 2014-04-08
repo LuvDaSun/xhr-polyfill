@@ -11,7 +11,7 @@ before_script:
 - node server.js > /dev/null &
 - sleep 3
 script:
-- jshint . -e .json
+- jshint .
 - karma start --browsers=PhantomJS,Firefox
 deploy:
   provider: npm
