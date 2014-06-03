@@ -116,6 +116,9 @@ window.xhrPolyfill.XMLHttpRequestProxy = function () {
 
 }; //XMLHttpRequestProxy
 
+/*
+use the proxy in ie < 10
+*/
 if (document.documentMode && document.documentMode < 10) {
     window.XMLHttpRequest = window.XMLHttpRequestProxy;
 }

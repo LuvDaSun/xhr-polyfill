@@ -25,9 +25,6 @@ Here's what you need to do:
 	"src/xhr-channel.js"
 	"src/xhr-channel.html"	
 
-- Use the window.xhrPolyfill.XMLHttpRequestProxy object to make cross-domain requests. This class is a drop-in replacement for XMLHttpRequest. So you may endup doing something like this when your browser does not support cross-domain requests:
-	"window.XMLHttpRequest = window.xhrPolyfill.XMLHttpRequestProxy"
-
 
 ## example
 
