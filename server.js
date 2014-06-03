@@ -6,7 +6,7 @@ var port = 8080;
 process.chdir(__dirname);
 
 var app = connect()
-//.use(connect.logger('dev'))
+
 .use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");

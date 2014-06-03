@@ -4,12 +4,14 @@
   "description": "xhr-polyfill will enable you to make cross domain request in ie8 / ie9",
   "dependencies": {},
   "devDependencies": {
+    "connect": "~2",
+    "jsdom": "^0.10.6",
     "karma": "0.12",
     "karma-coverage": "0.2",
     "karma-firefox-launcher": "0.1",
     "karma-mocha": "0.1",
     "karma-phantomjs-launcher": "0.1",
-    "connect": "~2"
+    "uglify-js": "^2.4.13"
   },
   "repository": "git://github.com/elmerbulthuis/xhr-polyfill.git",
   "author": "elmerbulthuis <elmerbulthuis@gmail.com>",
