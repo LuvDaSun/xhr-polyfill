@@ -4,7 +4,8 @@
   "description": "xhr-polyfill will enable you to make cross domain request in ie8 / ie9",
   "dependencies": {},
   "devDependencies": {
-    "connect": "~2",
+    "connect": "^2.19.1",
+    "express": "^4.4.1",
     "jsdom": "^0.10.6",
     "karma": "0.12",
     "karma-coverage": "0.2",

@@ -1,11 +1,11 @@
 /* jshint node: true */
 
-var connect = require('connect');
+var express = require('express');
 var port = 8080;
 
 process.chdir(__dirname);
 
-var app = connect()
+var server = express()
     .use(function (req, res, next) {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
@@ -15,24 +15,9 @@ var app = connect()
         if (req.method === 'OPTIONS') res.send(204);
         else next();
     })
-    .use(connect.static('src'))
-    .use(connect.static('test'))
-;
+    .use(express.static('src'))
+    .use(express.static('test'));
 
 
-notify('starting server on port ' + port);
-var server = app.listen(port, function () {
-    notify('server started');
-});
-
-process.on('SIGINT', function () {
-    notify('stopping server on port ' + port);
-    server.close(function () {
-        notify('server stopped');
-    });
-});
-
-function notify(message) {
-    console.log(message);
-    process.send && process.send(message);
-}
+console.log('starting server on port ' + port);
+server.listen(port);
