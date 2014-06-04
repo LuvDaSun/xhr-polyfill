@@ -15,31 +15,25 @@ Here's what you need to do:
 - Install xhr-polyfill via bower
 	"bower install xhr-polyfill"
 
-- Include the following files in the webpages that make cross-domain requests:
-	"src/shared.js"
-	"src/IFrameChannel.js"
-	"src/XMLHttpRequestProxy.js"
+- Include "dist/xhr-polyfill.js" wilt in your html.
 
-- Server the following files from the root of the server that will receive the cross-domain requests:
-	"src/shared.js"
-	"src/xhr-channel.js"
-	"src/xhr-channel.html"	
+- Add "src/xhr-channel.html" to the server that you want to make a cross domain request to.
 
 
 ## example
 
 https://goabout.com is a web application that uses an api at https://api.goabout.com . This web application is also supposed to work on ie8, so xhr-polyfill is used.
 
-The xhr-channel.html file is included in the root of the server. You may take a look at it here: https://api.goabout.com/xhr-channel.html . The javascript files are included and iminified right in the html for better performance.
+The xhr-channel.html file is included in the root of the server. You may take a look at it here: https://api.goabout.com/xhr-channel.html.
 
-The client scripts ("src/shared.js", "src/IFrameChannel.js", "src/XMLHttpRequestProxy.js") are included in the web application at https://goabout.com . They may not be visible in the soure-code because they are concatenated and minified together with a lot of other scripts.
+The client script ("dist/xhr-polyfill.js") is included in the web application at https://goabout.com. It may not be visible in the soure-code because it is concatenated and minified together with a lot of other scripts.
 
 The result is an angularjs app that is able to use an api that is located on another domain, even in ie8.
 
 
 ## This seems complicated / I don't get it
 
-xhr-polyfill is not a really developer friendly solution (yet). Simply beause I do not have a lot of time to work on it and also because browsers that are unable to make cross-domain requests are a dying breed (finally). If you wish to use this solution in a production environment, don't hesitate to conctact me!
+If you wish to use this solution in a production environment, don't hesitate to conctact me! I am glad to help.
 
 
 ## How does it work?
