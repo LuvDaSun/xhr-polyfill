@@ -120,5 +120,5 @@ window.xhrPolyfill.XMLHttpRequestProxy = function () {
 use the proxy in ie < 10
 */
 if (document.documentMode && document.documentMode < 10) {
-    window.XMLHttpRequest = window.XMLHttpRequestProxy;
+    window.XMLHttpRequest = window.xhrPolyfill.XMLHttpRequestProxy;
 }
