@@ -5,6 +5,7 @@ window.xhrPolyfill = window.xhrPolyfill || {};
 window.xhrPolyfill.channels = {};
 window.xhrPolyfill.proxies = {};
 window.xhrPolyfill.idSequence = 0;
+window.xhrPolyfill.xhrChannelPath = '/xhr-channel.html';
 
 window.xhrPolyfill.ensureChannel = function (url) {
     var origin;
@@ -96,7 +97,7 @@ window.xhrPolyfill.XMLHttpRequestProxy = function () {
         } else {
             window.xhrPolyfill.proxies[id] = this;
 
-            channel = window.xhrPolyfill.ensureChannel(origin + '/xhr-channel.html');
+            channel = window.xhrPolyfill.ensureChannel(origin + window.xhrPolyfill.xhrChannelPath);
 
             channel.send(options);
         }
