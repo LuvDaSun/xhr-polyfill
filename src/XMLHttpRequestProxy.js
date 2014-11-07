@@ -52,6 +52,16 @@ window.xhrPolyfill.xhrReceive = function (proxy, state) {
         return responseHeaders[name];
     };
     proxy.onreadystatechange && proxy.onreadystatechange(proxy);
+
+    if(state.readyState == 4 && proxy.onload){
+        var loadEvent = document.createEvent('Event');
+        loadEvent.initEvent('load', false, true);
+        loadEvent.type = 'load';
+        loadEvent.target = proxy;
+        loadEvent.currentTarget = proxy;
+        loadEvent.eventPhase = 2;
+        proxy.onload(loadEvent);
+    }
 }; //xhrReceive
 
 window.xhrPolyfill.XMLHttpRequestProxy = function () {
@@ -67,6 +77,7 @@ window.xhrPolyfill.XMLHttpRequestProxy = function () {
     };
 
     this.onreadystatechange = null;
+    this.onload = null;
     this.readyState = 0;
     this.responseText = null;
     //this.responseXML = null;

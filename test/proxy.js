@@ -24,6 +24,22 @@ describe('proxy', function () {
 
         });
 
+        it('single request should call onload', function (cb) {
+
+            var xhr = new window.xhrPolyfill.XMLHttpRequestProxy();
+            xhr.open('GET', '//' + location.hostname + ':8080/data.json', true);
+            xhr.onload = function () {
+                expect(xhr.status).to.be(200);
+                expect(xhr.getResponseHeader('Content-Type')).to.be('application/json');
+                expect(xhr.responseText).to.be('["one", "two", "three"]');
+
+                cb();
+            };
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.send(null);
+
+        });
+
         it('burst should be ok', function (cb) {
             var countdown = 100;
 
